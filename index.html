@@ -1,48 +1,72 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Animal Selector</title>
+    <title>반려동물 나이 계산기</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f9f9f9;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            display: flex;
+            height: 100vh;
         }
-        .selector {
-            background: #ffffff;
+        .sidebar {
+            width: 250px;
+            background-color: #4CAF50;
+            color: white;
             padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            text-align: center;
-            width: 300px;
+            box-sizing: border-box;
+            position: fixed;
+            height: 100%;
         }
-        .selector h1 {
+        .sidebar h2 {
             font-size: 24px;
             margin-bottom: 20px;
         }
-        .selector select {
-            width: 100%;
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+        .sidebar ul li {
+            margin-bottom: 10px;
+        }
+        .sidebar ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 18px;
+        }
+        .sidebar ul li a:hover {
+            text-decoration: underline;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+            box-sizing: border-box;
+            width: calc(100% - 250px);
+        }
+        .content h1 {
+            font-size: 24px;
+        }
+        .content label {
+            display: block;
+            margin: 10px 0;
+        }
+        .content input {
             padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
+            width: 100%;
+            max-width: 300px;
             margin-bottom: 20px;
         }
-        .selector button {
-            width: 100%;
-            padding: 10px;
+        .content button {
+            padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
+            border-radius: 5px;
         }
-        .selector button:hover {
+        .content button:hover {
             background-color: #45a049;
         }
         .result {
@@ -52,39 +76,93 @@
     </style>
 </head>
 <body>
-    <div class="selector">
-        <h1>Select an Animal</h1>
-        <select id="animal-select">
-            <option value="개">개</option>
-            <option value="고양이">고양이</option>
-            <option value="늑대">늑대</option>
-            <option value="햄스터">햄스터</option>
-            <option value="토끼">토끼</option>
-            <option value="다람쥐">다람쥐</option>
-            <option value="병아리">병아리</option>
-            <option value="돌고래">돌고래</option>
-            <option value="앵무새">앵무새</option>
-            <option value="도마뱀">도마뱀</option>
-            <option value="거북이">거북이</option>
-            <option value="말">말</option>
-            <option value="뱀">뱀</option>
-            <option value="고슴도치">고슴도치</option>
-            <option value="사마귀">사마귀</option>
-            <option value="딱정벌레">딱정벌레</option>
-            <option value="올챙이와 개구리">올챙이와 개구리</option>
-            <option value="두꺼비">두꺼비</option>
-            <option value="귀뚜라미">귀뚜라미</option>
-            <option value="개미">개미</option>
-            <option value="달팽이">달팽이</option>
-        </select>
-        <button onclick="showSelectedAnimal()">Submit</button>
+    <div class="sidebar">
+        <h2>반려동물 목록</h2>
+        <ul>
+            <li><a href="#" onclick="selectAnimal('개')">개</a></li>
+            <li><a href="#" onclick="selectAnimal('고양이')">고양이</a></li>
+            <li><a href="#" onclick="selectAnimal('늑대')">늑대</a></li>
+            <li><a href="#" onclick="selectAnimal('햄스터')">햄스터</a></li>
+            <li><a href="#" onclick="selectAnimal('토끼')">토끼</a></li>
+            <li><a href="#" onclick="selectAnimal('다람쥐')">다람쥐</a></li>
+            <li><a href="#" onclick="selectAnimal('병아리')">병아리</a></li>
+            <li><a href="#" onclick="selectAnimal('돌고래')">돌고래</a></li>
+            <li><a href="#" onclick="selectAnimal('앵무새')">앵무새</a></li>
+            <li><a href="#" onclick="selectAnimal('도마뱀')">도마뱀</a></li>
+            <li><a href="#" onclick="selectAnimal('거북이')">거북이</a></li>
+            <li><a href="#" onclick="selectAnimal('말')">말</a></li>
+            <li><a href="#" onclick="selectAnimal('뱀')">뱀</a></li>
+            <li><a href="#" onclick="selectAnimal('고슴도치')">고슴도치</a></li>
+            <li><a href="#" onclick="selectAnimal('사마귀')">사마귀</a></li>
+            <li><a href="#" onclick="selectAnimal('딱정벌레')">딱정벌레</a></li>
+            <li><a href="#" onclick="selectAnimal('올챙이와 개구리')">올챙이와 개구리</a></li>
+            <li><a href="#" onclick="selectAnimal('두꺼비')">두꺼비</a></li>
+            <li><a href="#" onclick="selectAnimal('귀뚜라미')">귀뚜라미</a></li>
+            <li><a href="#" onclick="selectAnimal('개미')">개미</a></li>
+            <li><a href="#" onclick="selectAnimal('달팽이')">달팽이</a></li>
+        </ul>
+    </div>
+    <div class="content">
+        <h1 id="animal-title">반려동물 나이 계산기</h1>
+        <label for="birth-date">출생 연월:</label>
+        <input type="month" id="birth-date">
+        <button onclick="calculateAge()">계산</button>
         <div class="result" id="result"></div>
     </div>
 
     <script>
-        function showSelectedAnimal() {
-            const selectedAnimal = document.getElementById('animal-select').value;
-            document.getElementById('result').innerText = `You selected: ${selectedAnimal}`;
+        let selectedAnimal = '';
+
+        function selectAnimal(animal) {
+            selectedAnimal = animal;
+            document.getElementById('animal-title').innerText = `${animal} 나이 계산기`;
+            document.getElementById('result').innerText = '';
+        }
+
+        function calculateAge() {
+            const birthDateInput = document.getElementById('birth-date').value;
+            if (!birthDateInput) {
+                document.getElementById('result').innerText = '출생 연월을 입력하세요.';
+                return;
+            }
+
+            const birthDate = new Date(birthDateInput);
+            const today = new Date();
+
+            const ageInMonths = (today.getFullYear() - birthDate.getFullYear()) * 12 + today.getMonth() - birthDate.getMonth();
+            const humanAge = convertToHumanAge(selectedAnimal, ageInMonths);
+
+            document.getElementById('result').innerText = `${selectedAnimal}의 사람 나이는 약 ${humanAge}세 입니다.`;
+        }
+
+        function convertToHumanAge(animal, ageInMonths) {
+            // 한국동물병원협회 데이터를 기반으로 계산 (예시 데이터 사용)
+            const conversionRates = {
+                '개': 12,
+                '고양이': 15,
+                '늑대': 10,
+                '햄스터': 36,
+                '토끼': 24,
+                '다람쥐': 36,
+                '병아리': 18,
+                '돌고래': 8,
+                '앵무새': 5,
+                '도마뱀': 12,
+                '거북이': 20,
+                '말': 3,
+                '뱀': 8,
+                '고슴도치': 24,
+                '사마귀': 12,
+                '딱정벌레': 6,
+                '올챙이와 개구리': 4,
+                '두꺼비': 6,
+                '귀뚜라미': 2,
+                '개미': 2,
+                '달팽이': 4
+            };
+
+            const rate = conversionRates[animal] || 12; // 기본값 12개월
+            return Math.round(ageInMonths / rate);
         }
     </script>
 </body>
