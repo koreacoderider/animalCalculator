@@ -19,6 +19,7 @@
             box-sizing: border-box;
             position: fixed;
             height: 100%;
+            overflow-y: auto;
         }
         .sidebar h2 {
             font-size: 24px;
@@ -47,6 +48,17 @@
             display: flex;
             flex-direction: column;
             gap: 20px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+            }
+            .content {
+                margin-left: 0;
+                width: 100%;
+            }
         }
         .calculator {
             background: #f9f9f9;
@@ -112,38 +124,32 @@
             color: #4CAF50;
             text-decoration: none;
         }
+        .info {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #eef9f2;
+            border-left: 5px solid #4CAF50;
+        }
     </style>
 </head>
 <body>
     <div class="sidebar">
         <h2>반려동물 목록</h2>
         <ul>
-            <li><a href="#" onclick="selectAnimal('개')">개</a></li>
-            <li><a href="#" onclick="selectAnimal('고양이')">고양이</a></li>
-            <li><a href="#" onclick="selectAnimal('늑대')">늑대</a></li>
-            <li><a href="#" onclick="selectAnimal('햄스터')">햄스터</a></li>
-            <li><a href="#" onclick="selectAnimal('토끼')">토끼</a></li>
-            <li><a href="#" onclick="selectAnimal('다람쥐')">다람쥐</a></li>
-            <li><a href="#" onclick="selectAnimal('병아리')">병아리</a></li>
-            <li><a href="#" onclick="selectAnimal('돌고래')">돌고래</a></li>
-            <li><a href="#" onclick="selectAnimal('앵무새')">앵무새</a></li>
-            <li><a href="#" onclick="selectAnimal('도마뱀')">도마뱀</a></li>
-            <li><a href="#" onclick="selectAnimal('거북이')">거북이</a></li>
-            <li><a href="#" onclick="selectAnimal('말')">말</a></li>
-            <li><a href="#" onclick="selectAnimal('뱀')">뱀</a></li>
-            <li><a href="#" onclick="selectAnimal('고슴도치')">고슴도치</a></li>
-            <li><a href="#" onclick="selectAnimal('사마귀')">사마귀</a></li>
-            <li><a href="#" onclick="selectAnimal('딱정벌레')">딱정벌레</a></li>
-            <li><a href="#" onclick="selectAnimal('올챙이와 개구리')">올챙이와 개구리</a></li>
-            <li><a href="#" onclick="selectAnimal('두꺼비')">두꺼비</a></li>
-            <li><a href="#" onclick="selectAnimal('귀뚜라미')">귀뚜라미</a></li>
-            <li><a href="#" onclick="selectAnimal('개미')">개미</a></li>
-            <li><a href="#" onclick="selectAnimal('달팽이')">달팽이</a></li>
+            <li><a href="#" onclick="selectAnimal('개', '10–13년', 'https://www.aaha.org')">개</a></li>
+            <li><a href="#" onclick="selectAnimal('고양이', '12–15년', 'https://www.aaha.org')">고양이</a></li>
+            <li><a href="#" onclick="selectAnimal('늑대', '6–8년', 'https://wolf.org')">늑대</a></li>
+            <li><a href="#" onclick="selectAnimal('햄스터', '2–3년', 'https://www.avma.org')">햄스터</a></li>
+            <li><a href="#" onclick="selectAnimal('토끼', '8–12년', 'https://rabbit.org')">토끼</a></li>
+            <li><a href="#" onclick="selectAnimal('다람쥐', '6–12년', 'https://www.nwf.org')">다람쥐</a></li>
+            <li><a href="#" onclick="selectAnimal('병아리', '5–10년', 'https://www.upc-online.org')">병아리</a></li>
+            <li><a href="#" onclick="selectAnimal('돌고래', '40–60년', 'https://www.noaa.gov')">돌고래</a></li>
         </ul>
     </div>
     <div class="content">
         <div class="calculator">
             <h1 id="animal-title">반려동물 나이 계산기</h1>
+            <div id="animal-info" class="info">동물을 선택하면 수명 정보가 여기에 표시됩니다.</div>
             <label for="animal-type">종류:</label>
             <select id="animal-type">
                 <option value="소형">소형</option>
@@ -157,38 +163,15 @@
             <button onclick="calculateAge()">계산하기</button>
             <div class="result" id="result"></div>
         </div>
-        <div class="reference">
-            <h2>참고 자료 및 계산 방법</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>종류</th>
-                        <th>환산 기준</th>
-                        <th>출처</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>소형견</td>
-                        <td>12개월 = 15세</td>
-                        <td><a href="https://www.fitpetmall.com" target="_blank">Fitpet</a></td>
-                    </tr>
-                    <tr>
-                        <td>중형견</td>
-                        <td>12개월 = 12세</td>
-                        <td><a href="https://www.fitpetmall.com" target="_blank">Fitpet</a></td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
     </div>
 
     <script>
         let selectedAnimal = '개';
 
-        function selectAnimal(animal) {
+        function selectAnimal(animal, lifespan, source) {
             selectedAnimal = animal;
             document.getElementById('animal-title').innerText = `${animal} 나이 계산기`;
+            document.getElementById('animal-info').innerHTML = `<strong>${animal}</strong>의 평균 수명은 <strong>${lifespan}</strong>입니다. (<a href="${source}" target="_blank">출처</a>)`;
             document.getElementById('result').innerText = '';
         }
 
