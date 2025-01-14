@@ -44,21 +44,31 @@
             padding: 20px;
             box-sizing: border-box;
             width: calc(100% - 250px);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
         }
-        .content h1 {
+        .calculator {
+            background: #f9f9f9;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .calculator h1 {
             font-size: 24px;
+            margin-bottom: 10px;
         }
-        .content label {
+        .calculator label {
             display: block;
             margin: 10px 0;
         }
-        .content input {
+        .calculator input {
             padding: 10px;
             width: 100%;
             max-width: 300px;
             margin-bottom: 20px;
         }
-        .content button {
+        .calculator button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -66,12 +76,41 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        .content button:hover {
+        .calculator button:hover {
             background-color: #45a049;
         }
         .result {
             margin-top: 20px;
             font-size: 18px;
+        }
+        .reference {
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .reference h2 {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        .reference table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+        .reference table, .reference th, .reference td {
+            border: 1px solid #ddd;
+        }
+        .reference th, .reference td {
+            text-align: left;
+            padding: 8px;
+        }
+        .reference th {
+            background-color: #f2f2f2;
+        }
+        .reference a {
+            color: #4CAF50;
+            text-decoration: none;
         }
     </style>
 </head>
@@ -103,11 +142,39 @@
         </ul>
     </div>
     <div class="content">
-        <h1 id="animal-title">반려동물 나이 계산기</h1>
-        <label for="birth-date">출생 연월:</label>
-        <input type="month" id="birth-date">
-        <button onclick="calculateAge()">계산</button>
-        <div class="result" id="result"></div>
+        <div class="calculator">
+            <h1 id="animal-title">반려동물 나이 계산기</h1>
+            <label for="birth-date">출생 연월:</label>
+            <input type="month" id="birth-date">
+            <button onclick="calculateAge()">계산</button>
+            <div class="result" id="result"></div>
+        </div>
+        <div class="reference">
+            <h2>참고 자료 및 계산 방법</h2>
+            <p>아래는 계산 기준 및 출처입니다:</p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>동물</th>
+                        <th>환산 기준 (개월)</th>
+                        <th>출처</th>
+                    </tr>
+                </thead>
+                <tbody id="reference-table">
+                    <tr>
+                        <td>개</td>
+                        <td>12</td>
+                        <td><a href="https://www.fitpetmall.com" target="_blank">Fitpet</a></td>
+                    </tr>
+                    <tr>
+                        <td>고양이</td>
+                        <td>15</td>
+                        <td><a href="https://www.fitpetmall.com" target="_blank">Fitpet</a></td>
+                    </tr>
+                    <!-- Add more rows as needed -->
+                </tbody>
+            </table>
+        </div>
     </div>
 
     <script>
@@ -136,7 +203,6 @@
         }
 
         function convertToHumanAge(animal, ageInMonths) {
-            // 한국동물병원협회 데이터를 기반으로 계산 (예시 데이터 사용)
             const conversionRates = {
                 '개': 12,
                 '고양이': 15,
@@ -161,7 +227,7 @@
                 '달팽이': 4
             };
 
-            const rate = conversionRates[animal] || 12; // 기본값 12개월
+            const rate = conversionRates[animal] || 12;
             return Math.round(ageInMonths / rate);
         }
     </script>
