@@ -120,8 +120,25 @@
         <ul>
             <li><a href="#" onclick="selectAnimal('개')">개</a></li>
             <li><a href="#" onclick="selectAnimal('고양이')">고양이</a></li>
+            <li><a href="#" onclick="selectAnimal('늑대')">늑대</a></li>
             <li><a href="#" onclick="selectAnimal('햄스터')">햄스터</a></li>
             <li><a href="#" onclick="selectAnimal('토끼')">토끼</a></li>
+            <li><a href="#" onclick="selectAnimal('다람쥐')">다람쥐</a></li>
+            <li><a href="#" onclick="selectAnimal('병아리')">병아리</a></li>
+            <li><a href="#" onclick="selectAnimal('돌고래')">돌고래</a></li>
+            <li><a href="#" onclick="selectAnimal('앵무새')">앵무새</a></li>
+            <li><a href="#" onclick="selectAnimal('도마뱀')">도마뱀</a></li>
+            <li><a href="#" onclick="selectAnimal('거북이')">거북이</a></li>
+            <li><a href="#" onclick="selectAnimal('말')">말</a></li>
+            <li><a href="#" onclick="selectAnimal('뱀')">뱀</a></li>
+            <li><a href="#" onclick="selectAnimal('고슴도치')">고슴도치</a></li>
+            <li><a href="#" onclick="selectAnimal('사마귀')">사마귀</a></li>
+            <li><a href="#" onclick="selectAnimal('딱정벌레')">딱정벌레</a></li>
+            <li><a href="#" onclick="selectAnimal('올챙이와 개구리')">올챙이와 개구리</a></li>
+            <li><a href="#" onclick="selectAnimal('두꺼비')">두꺼비</a></li>
+            <li><a href="#" onclick="selectAnimal('귀뚜라미')">귀뚜라미</a></li>
+            <li><a href="#" onclick="selectAnimal('개미')">개미</a></li>
+            <li><a href="#" onclick="selectAnimal('달팽이')">달팽이</a></li>
         </ul>
     </div>
     <div class="content">
@@ -133,8 +150,10 @@
                 <option value="중형">중형</option>
                 <option value="대형">대형</option>
             </select>
-            <label for="birth-date">출생 연월:</label>
-            <input type="month" id="birth-date">
+            <label for="years">나이(년):</label>
+            <input type="number" id="years" placeholder="예: 2">
+            <label for="months">나이(개월):</label>
+            <input type="number" id="months" placeholder="예: 6">
             <button onclick="calculateAge()">계산하기</button>
             <div class="result" id="result"></div>
         </div>
@@ -174,19 +193,20 @@
         }
 
         function calculateAge() {
-            const birthDateInput = document.getElementById('birth-date').value;
+            const yearsInput = document.getElementById('years').value;
+            const monthsInput = document.getElementById('months').value;
             const animalType = document.getElementById('animal-type').value;
 
-            if (!birthDateInput) {
-                document.getElementById('result').innerText = '출생 연월을 입력하세요.';
+            const years = parseInt(yearsInput) || 0;
+            const months = parseInt(monthsInput) || 0;
+
+            if (years < 0 || months < 0 || months >= 12) {
+                document.getElementById('result').innerText = '올바른 나이를 입력하세요.';
                 return;
             }
 
-            const birthDate = new Date(birthDateInput);
-            const today = new Date();
-
-            const ageInMonths = (today.getFullYear() - birthDate.getFullYear()) * 12 + today.getMonth() - birthDate.getMonth();
-            const humanAge = convertToHumanAge(animalType, ageInMonths);
+            const totalMonths = years * 12 + months;
+            const humanAge = convertToHumanAge(animalType, totalMonths);
 
             document.getElementById('result').innerText = `${selectedAnimal}(${animalType})의 사람 나이는 약 ${humanAge}세 입니다.`;
         }
@@ -199,7 +219,7 @@
             };
 
             const rate = conversionRates[type] || 12;
-            return Math.round(ageInMonths / rate);
+            return Math.max(0, Math.round(ageInMonths / rate));
         }
     </script>
 </body>
