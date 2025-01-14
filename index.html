@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cat Age Calculator</title>
+    <title>Animal Selector</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -14,7 +14,7 @@
             height: 100vh;
             margin: 0;
         }
-        .calculator {
+        .selector {
             background: #ffffff;
             padding: 20px;
             border-radius: 8px;
@@ -22,18 +22,18 @@
             text-align: center;
             width: 300px;
         }
-        .calculator h1 {
+        .selector h1 {
             font-size: 24px;
             margin-bottom: 20px;
         }
-        .calculator input {
+        .selector select {
             width: 100%;
             padding: 10px;
-            margin-bottom: 10px;
             border: 1px solid #ddd;
             border-radius: 4px;
+            margin-bottom: 20px;
         }
-        .calculator button {
+        .selector button {
             width: 100%;
             padding: 10px;
             background-color: #4CAF50;
@@ -42,7 +42,7 @@
             border-radius: 4px;
             cursor: pointer;
         }
-        .calculator button:hover {
+        .selector button:hover {
             background-color: #45a049;
         }
         .result {
@@ -52,34 +52,39 @@
     </style>
 </head>
 <body>
-    <div class="calculator">
-        <h1>Cat Age Calculator</h1>
-        <label for="cat-age">Enter your cat's age (in human years):</label>
-        <input type="number" id="cat-age" placeholder="e.g., 2">
-        <button onclick="calculateCatAge()">Calculate</button>
+    <div class="selector">
+        <h1>Select an Animal</h1>
+        <select id="animal-select">
+            <option value="개">개</option>
+            <option value="고양이">고양이</option>
+            <option value="늑대">늑대</option>
+            <option value="햄스터">햄스터</option>
+            <option value="토끼">토끼</option>
+            <option value="다람쥐">다람쥐</option>
+            <option value="병아리">병아리</option>
+            <option value="돌고래">돌고래</option>
+            <option value="앵무새">앵무새</option>
+            <option value="도마뱀">도마뱀</option>
+            <option value="거북이">거북이</option>
+            <option value="말">말</option>
+            <option value="뱀">뱀</option>
+            <option value="고슴도치">고슴도치</option>
+            <option value="사마귀">사마귀</option>
+            <option value="딱정벌레">딱정벌레</option>
+            <option value="올챙이와 개구리">올챙이와 개구리</option>
+            <option value="두꺼비">두꺼비</option>
+            <option value="귀뚜라미">귀뚜라미</option>
+            <option value="개미">개미</option>
+            <option value="달팽이">달팽이</option>
+        </select>
+        <button onclick="showSelectedAnimal()">Submit</button>
         <div class="result" id="result"></div>
     </div>
 
     <script>
-        function calculateCatAge() {
-            const catAgeInput = document.getElementById('cat-age').value;
-            const humanYears = parseFloat(catAgeInput);
-
-            if (isNaN(humanYears) || humanYears <= 0) {
-                document.getElementById('result').innerText = "Please enter a valid age.";
-                return;
-            }
-
-            let catAge;
-            if (humanYears === 1) {
-                catAge = 15;
-            } else if (humanYears === 2) {
-                catAge = 24;
-            } else {
-                catAge = 24 + (humanYears - 2) * 4;
-            }
-
-            document.getElementById('result').innerText = `Your cat's age in cat years is approximately ${catAge} years.`;
+        function showSelectedAnimal() {
+            const selectedAnimal = document.getElementById('animal-select').value;
+            document.getElementById('result').innerText = `You selected: ${selectedAnimal}`;
         }
     </script>
 </body>
