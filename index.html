@@ -3,20 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="고양이 나이 계산기와 다양한 반려동물 나이를 사람 나이로 환산해주는 도구">
-    <meta name="keywords" content="고양이 나이 계산기, 반려동물 나이 환산, 동물 나이 계산">
-    <meta name="author" content="Your Name">
-    <meta name="robots" content="index, follow">
-    <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "WebSite",
-          "name": "반려동물 나이 계산기",
-          "url": "https://yourdomain.com",
-          "description": "고양이, 개 등 반려동물의 나이를 사람 나이로 계산할 수 있는 도구입니다."
-        }
-    </script>
-
     <title>반려동물 나이 계산기</title>
     <style>
         body {
@@ -24,77 +10,77 @@
             margin: 0;
             display: flex;
             height: 100vh;
+            flex-direction: column;
         }
-        .sidebar {
-            width: 250px;
+        header {
             background-color: #4CAF50;
             color: white;
-            padding: 20px;
-            box-sizing: border-box;
-            position: fixed;
-            height: 100%;
-            overflow-y: auto;
-        }
-        .sidebar h2 {
+            padding: 10px 20px;
+            text-align: center;
             font-size: 24px;
-            margin-bottom: 20px;
         }
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
+        .tabs {
+            display: flex;
+            justify-content: center;
+            background-color: #f1f1f1;
+            padding: 10px;
         }
-        .sidebar ul li {
-            margin-bottom: 10px;
-        }
-        .sidebar ul li a {
-            color: white;
-            text-decoration: none;
+        .tabs button {
+            background-color: transparent;
+            border: none;
             font-size: 18px;
+            margin: 0 10px;
+            cursor: pointer;
+            padding: 5px 10px;
         }
-        .sidebar ul li a:hover {
-            text-decoration: underline;
+        .tabs button.active {
+            border-bottom: 2px solid #4CAF50;
+            font-weight: bold;
+        }
+        .radio-group {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .radio-group label {
+            font-size: 18px;
+            cursor: pointer;
         }
         .content {
-            margin-left: 250px;
             padding: 20px;
-            box-sizing: border-box;
-            width: calc(100% - 250px);
-            display: flex;
+            display: none;
             flex-direction: column;
+            align-items: center;
             gap: 20px;
         }
-        @media (max-width: 768px) {
-            .sidebar {
-                position: relative;
-                width: 30%;
-                height: auto;
-            }
-            .content {
-                margin-left: 0;
-                width: 70%;
-            }
+        .content.active {
+            display: flex;
         }
         .calculator {
             background: #f9f9f9;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .calculator h1 {
-            font-size: 24px;
-            margin-bottom: 10px;
-        }
-        .calculator label {
-            display: block;
-            margin: 10px 0;
-        }
-        .calculator select, .calculator input {
-            padding: 10px;
+            max-width: 500px;
             width: 100%;
-            max-width: 300px;
+        }
+        .calculator h2 {
+            text-align: center;
+            font-size: 20px;
             margin-bottom: 20px;
         }
-        .calculator button {
+        .calculator select {
+            padding: 10px;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+        .result {
+            text-align: center;
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        button {
             padding: 10px 20px;
             background-color: #4CAF50;
             color: white;
@@ -102,134 +88,163 @@
             cursor: pointer;
             border-radius: 5px;
         }
-        .calculator button:hover {
+        button:hover {
             background-color: #45a049;
         }
-        .result {
-            margin-top: 20px;
-            font-size: 18px;
+        .scrollable-table {
+            overflow-x: auto;
+            width: 100%;
         }
-        .reference {
-            background: #ffffff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-        }
-        .reference h2 {
-            font-size: 20px;
-            margin-bottom: 10px;
-        }
-        .reference table {
+        table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 10px;
+            margin: 20px 0;
         }
-        .reference table, .reference th, .reference td {
+        table, th, td {
             border: 1px solid #ddd;
         }
-        .reference th, .reference td {
-            text-align: left;
+        th, td {
             padding: 8px;
+            text-align: center;
         }
-        .reference th {
+        th {
             background-color: #f2f2f2;
-        }
-        .reference a {
-            color: #4CAF50;
-            text-decoration: none;
-        }
-        .info {
-            margin-top: 20px;
-            padding: 15px;
-            background-color: #eef9f2;
-            border-left: 5px solid #4CAF50;
         }
     </style>
 </head>
 <body>
-    <div class="sidebar">
-        <h2>반려동물 목록</h2>
-        <ul>
-            <li><a href="#" onclick="selectAnimal('개', '10–13년', 'https://www.aaha.org')">개</a></li>
-            <li><a href="#" onclick="selectAnimal('고양이', '12–15년', 'https://www.aaha.org')">고양이</a></li>
-            <li><a href="#" onclick="selectAnimal('늑대', '6–8년', 'https://wolf.org')">늑대</a></li>
-            <li><a href="#" onclick="selectAnimal('햄스터', '2–3년', 'https://www.avma.org')">햄스터</a></li>
-            <li><a href="#" onclick="selectAnimal('토끼', '8–12년', 'https://rabbit.org')">토끼</a></li>
-            <li><a href="#" onclick="selectAnimal('다람쥐', '6–12년', 'https://www.nwf.org')">다람쥐</a></li>
-            <li><a href="#" onclick="selectAnimal('병아리', '5–10년', 'https://www.upc-online.org')">병아리</a></li>
-            <li><a href="#" onclick="selectAnimal('돌고래', '40–60년', 'https://www.noaa.gov')">돌고래</a></li>
-            <li><a href="#" onclick="selectAnimal('앵무새', '50–70년', 'https://www.parrots.org')">앵무새</a></li>
-            <li><a href="#" onclick="selectAnimal('도마뱀', '10–20년', 'https://reptilesmagazine.com')">도마뱀</a></li>
-            <li><a href="#" onclick="selectAnimal('거북이', '50–100년', 'https://www.worldwildlife.org')">거북이</a></li>
-            <li><a href="#" onclick="selectAnimal('말', '25–30년', 'https://equinewellnessmagazine.com')">말</a></li>
-            <li><a href="#" onclick="selectAnimal('뱀', '15–25년', 'https://reptilesmagazine.com')">뱀</a></li>
-            <li><a href="#" onclick="selectAnimal('고슴도치', '4–7년', 'https://www.avma.org')">고슴도치</a></li>
-            <li><a href="#" onclick="selectAnimal('사마귀', '1년', 'https://www.nationalgeographic.com')">사마귀</a></li>
-            <li><a href="#" onclick="selectAnimal('딱정벌레', '1–2년', 'https://www.nationalgeographic.com')">딱정벌레</a></li>
-            <li><a href="#" onclick="selectAnimal('올챙이와 개구리', '4–15년', 'https://amphibianark.org')">올챙이와 개구리</a></li>
-            <li><a href="#" onclick="selectAnimal('두꺼비', '10–12년', 'https://amphibianark.org')">두꺼비</a></li>
-            <li><a href="#" onclick="selectAnimal('귀뚜라미', '6개월', 'https://www.nationalgeographic.com')">귀뚜라미</a></li>
-            <li><a href="#" onclick="selectAnimal('개미', '1–5년', 'https://www.nationalgeographic.com')">개미</a></li>
-            <li><a href="#" onclick="selectAnimal('달팽이', '2–5년', 'https://www.nationalgeographic.com')">달팽이</a></li>
-        </ul>
+    <header>반려동물 나이 계산기</header>
+    <div class="tabs">
+        <button class="active" onclick="showTab('dog')">강아지</button>
+        <button onclick="showTab('cat')">고양이</button>
     </div>
-    <div class="content">
-        <div class="calculator">
-            <h1 id="animal-title">반려동물 나이 계산기</h1>
-            <div id="animal-info" class="info">동물을 선택하면 수명 정보가 여기에 표시됩니다.</div>
-            <label for="animal-type">종류:</label>
-            <select id="animal-type">
-                <option value="소형">소형</option>
-                <option value="중형">중형</option>
-                <option value="대형">대형</option>
+
+    <div class="radio-group">
+        <label><input type="radio" name="viewType" value="ageCalc" checked onclick="showContent('ageCalc')"> 나이 계산</label>
+        <label><input type="radio" name="viewType" value="ageComparison" onclick="showContent('ageComparison')"> 나이 비교표</label>
+    </div>
+
+    <div class="content active" id="ageCalc">
+        <div id="dog" class="calculator">
+            <h2>강아지 나이 계산</h2>
+            <div class="radio-group">
+                <label><input type="radio" name="dogType" value="소형견" checked> 소형견</label>
+                <label><input type="radio" name="dogType" value="중형견"> 중형견</label>
+                <label><input type="radio" name="dogType" value="대형견"> 대형견</label>
+            </div>
+            <label for="dogYears">나이 (년):</label>
+            <select id="dogYears">
+                <option value="0">0년</option>
+                <option value="1">1년</option>
+                <option value="2">2년</option>
+                <option value="21">21년</option>
             </select>
-            <label for="years">나이(년):</label>
-            <input type="number" id="years" placeholder="예: 2">
-            <label for="months">나이(개월):</label>
-            <input type="number" id="months" placeholder="예: 6">
-            <button onclick="calculateAge()">계산하기</button>
-            <div class="result" id="result"></div>
+
+            <label for="dogMonths">나이 (개월):</label>
+            <select id="dogMonths">
+                <option value="0">0개월</option>
+                <option value="1">1개월</option>
+                <option value="11">11개월</option>
+            </select>
+
+            <button onclick="calculateDogAge()">계산하기</button>
+            <div class="result" id="dogResult"></div>
+        </div>
+
+        <div id="cat" class="calculator" style="display: none;">
+            <h2>고양이 나이 계산</h2>
+            <div class="radio-group">
+                <label><input type="radio" name="catType" value="집고양이" checked> 집고양이</label>
+                <label><input type="radio" name="catType" value="길고양이"> 길고양이</label>
+            </div>
+            <label for="catYears">나이 (년):</label>
+            <select id="catYears">
+                <option value="0">0년</option>
+                <option value="1">1년</option>
+                <option value="2">2년</option>
+                <option value="21">21년</option>
+            </select>
+
+            <label for="catMonths">나이 (개월):</label>
+            <select id="catMonths">
+                <option value="0">0개월</option>
+                <option value="1">1개월</option>
+                <option value="11">11개월</option>
+            </select>
+
+            <button onclick="calculateCatAge()">계산하기</button>
+            <div class="result" id="catResult"></div>
+        </div>
+    </div>
+
+    <div class="content" id="ageComparison">
+        <div class="calculator">
+            <h2>강아지 나이 비교표</h2>
+            <div class="scrollable-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>나이</th>
+                            <th>생애주기</th>
+                            <th>소형견</th>
+                            <th>중형견</th>
+                            <th>대형견</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1개월</td><td>영유아기</td><td>1살</td><td>1살</td><td>1살</td></tr>
+                        <tr><td>2개월</td><td>영유아기</td><td>2살</td><td>2살</td><td>2살</td></tr>
+                        <tr><td>3개월</td><td>영유아기</td><td>5살</td><td>5살</td><td>5살</td></tr>
+                        <tr><td>4개월</td><td>영유아기</td><td>6살</td><td>6살</td><td>6살</td></tr>
+                        <tr><td>5개월</td><td>아동/청소년기</td><td>8살</td><td>8살</td><td>8살</td></tr>
+                        <tr><td>6개월</td><td>아동/청소년기</td><td>10살</td><td>10살</td><td>10살</td></tr>
+                        <tr><td>7개월</td><td>아동/청소년기</td><td>11살</td><td>11살</td><td>11살</td></tr>
+                        <tr><td>8개월</td><td>아동/청소년기</td><td>12살</td><td>12살</td><td>12살</td></tr>
+                        <tr><td>9개월</td><td>아동/청소년기</td><td>13살</td><td>13살</td><td>13살</td></tr>
+                        <tr><td>10개월</td><td>아동/청소년기</td><td>14살</td><td>14살</td><td>14살</td></tr>
+                        <tr><td>11개월</td><td>아동/청소년기</td><td>15살</td><td>15살</td><td>15살</td></tr>
+                        <tr><td>1년</td><td>아동/청소년기</td><td>16살</td><td>16살</td><td>16살</td></tr>
+                        <tr><td>2년</td><td>청년기</td><td>24살</td><td>24살</td><td>24살</td></tr>
+                        <tr><td>3년</td><td>청년기</td><td>29살</td><td>30살</td><td>31살</td></tr>
+                        <tr><td>4년</td><td>청년기</td><td>34살</td><td>36살</td><td>38살</td></tr>
+                        <tr><td>5년</td><td>청년기</td><td>39살</td><td>42살</td><td>45살</td></tr>
+                        <tr><td>6년</td><td>중장년기</td><td>44살</td><td>48살</td><td>52살</td></tr>
+                        <tr><td>7년</td><td>중장년기</td><td>49살</td><td>54살</td><td>59살</td></tr>
+                        <tr><td>8년</td><td>중장년기</td><td>54살</td><td>60살</td><td>66살</td></tr>
+                        <tr><td>9년</td><td>중장년기</td><td>59살</td><td>66살</td><td>73살</td></tr>
+                        <tr><td>10년</td><td>중장년기</td><td>64살</td><td>72살</td><td>80살</td></tr>
+                        <tr><td>11년</td><td>노년기</td><td>69살</td><td>78살</td><td>87살</td></tr>
+                        <tr><td>12년</td><td>노년기</td><td>74살</td><td>84살</td><td>94살</td></tr>
+                        <tr><td>13년</td><td>노년기</td><td>79살</td><td>90살</td><td>101살</td></tr>
+                        <tr><td>14년</td><td>노년기</td><td>84살</td><td>96살</td><td>108살</td></tr>
+                        <tr><td>15년</td><td>노년기</td><td>89살</td><td>102살</td><td>115살</td></tr>
+                        <tr><td>16년</td><td>노년기</td><td>94살</td><td>108살</td><td>122살</td></tr>
+                        <tr><td>17년</td><td>노년기</td><td>99살</td><td>114살</td><td>129살</td></tr>
+                        <tr><td>18년</td><td>노년기</td><td>104살</td><td>120살</td><td>136살</td></tr>
+                        <tr><td>19년</td><td>노년기</td><td>109살</td><td>126살</td><td>143살</td></tr>
+                        <tr><td>20년</td><td>노년기</td><td>114살</td><td>132살</td><td>150살</td></tr>
+                        <tr><td>21년</td><td>노년기</td><td>119살</td><td>138살</td><td>157살</td></tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
     <script>
-        let selectedAnimal = '개';
-
-        function selectAnimal(animal, lifespan, source) {
-            selectedAnimal = animal;
-            document.getElementById('animal-title').innerText = `${animal} 나이 계산기`;
-            document.getElementById('animal-info').innerHTML = `<strong>${animal}</strong>의 평균 수명은 <strong>${lifespan}</strong>입니다. (<a href="${source}" target="_blank">출처</a>)`;
-            document.getElementById('result').innerText = '';
+        function showTab(tab) {
+            document.getElementById('dog').style.display = tab === 'dog' ? 'block' : 'none';
+            document.getElementById('cat').style.display = tab === 'cat' ? 'block' : 'none';
+            document.querySelectorAll('.tabs button').forEach(button => {
+                button.classList.remove('active');
+            });
+            document.querySelector(`.tabs button[onclick="showTab('${tab}')"]`).classList.add('active');
         }
 
-        function calculateAge() {
-            const yearsInput = document.getElementById('years').value;
-            const monthsInput = document.getElementById('months').value;
-            const animalType = document.getElementById('animal-type').value;
-
-            const years = parseInt(yearsInput) || 0;
-            const months = parseInt(monthsInput) || 0;
-
-            if (years < 0 || months < 0 || months >= 12) {
-                document.getElementById('result').innerText = '올바른 나이를 입력하세요.';
-                return;
-            }
-
-            const totalMonths = years * 12 + months;
-            const humanAge = convertToHumanAge(animalType, totalMonths);
-
-            document.getElementById('result').innerText = `${selectedAnimal}(${animalType})의 사람 나이는 약 ${humanAge}세 입니다.`;
-        }
-
-        function convertToHumanAge(type, ageInMonths) {
-            const conversionRates = {
-                '소형': 15,
-                '중형': 12,
-                '대형': 10
-            };
-
-            const rate = conversionRates[type] || 12;
-            return Math.max(0, Math.round(ageInMonths / rate));
+        function showContent(type) {
+            document.querySelectorAll('.content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(type).classList.add('active');
         }
     </script>
 </body>
