@@ -32,9 +32,6 @@
             cursor: pointer;
             position: relative;
         }
-        .full-menu:hover {
-            cursor: pointer;
-        }
         .hidden-menu {
             display: none;
             position: absolute;
@@ -96,39 +93,41 @@
         <!-- 전체 서비스 메뉴 -->
         <div class="full-menu d-flex align-items-center" onclick="toggleMenu()">
             <i class="fa-solid fa-bars"></i> 전체 서비스
-            <div id="menuOverlay" class="hidden-menu">
-                <i class="fa-solid fa-xmark close" onclick="toggleMenu()"></i>
-                <div class="menu-section">
-                    <div>
-                        <h4>유용한 기능</h4>
-                        <ul>
-                            <li><a href="#">마진율 계산기</a></li>
-                            <li><a href="#">엑셀 변환기</a></li>
-                            <li><a href="#">스토어 랭킹</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>창고 관리 서비스</h4>
-                        <ul>
-                            <li><a href="#">통합 상품 관리</a></li>
-                            <li><a href="#">통합 재고 관리</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>발주 관리 서비스</h4>
-                        <ul>
-                            <li><a href="#">통합 발주 관리</a></li>
-                            <li><a href="#">통합 판매 분석</a></li>
-                        </ul>
-                    </div>
-                    <div>
-                        <h4>고객센터</h4>
-                        <ul>
-                            <li><a href="#">셀러툴 이용 가이드</a></li>
-                            <li><a href="#">이용약관</a></li>
-                            <li><a href="#">개인정보처리방침</a></li>
-                        </ul>
-                    </div>
+        </div>
+        
+        <!-- 숨겨진 전체 메뉴 -->
+        <div id="menuOverlay" class="hidden-menu">
+            <i class="fa-solid fa-xmark close" onclick="toggleMenu()"></i>
+            <div class="menu-section">
+                <div>
+                    <h4>유용한 기능</h4>
+                    <ul>
+                        <li><a href="#">마진율 계산기</a></li>
+                        <li><a href="#">엑셀 변환기</a></li>
+                        <li><a href="#">스토어 랭킹</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>창고 관리 서비스</h4>
+                    <ul>
+                        <li><a href="#">통합 상품 관리</a></li>
+                        <li><a href="#">통합 재고 관리</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>발주 관리 서비스</h4>
+                    <ul>
+                        <li><a href="#">통합 발주 관리</a></li>
+                        <li><a href="#">통합 판매 분석</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h4>고객센터</h4>
+                    <ul>
+                        <li><a href="#">셀러툴 이용 가이드</a></li>
+                        <li><a href="#">이용약관</a></li>
+                        <li><a href="#">개인정보처리방침</a></li>
+                    </ul>
                 </div>
             </div>
         </div>
@@ -152,7 +151,7 @@
     <script>
         function toggleMenu() {
             const menu = document.getElementById('menuOverlay');
-            menu.style.display = menu.style.display === 'none' || menu.style.display === '' ? 'block' : 'none';
+            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
         }
     </script>
 </body>
