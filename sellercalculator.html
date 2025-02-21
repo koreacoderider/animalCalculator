@@ -30,20 +30,23 @@
             align-items: center;
             font-size: 18px;
             cursor: pointer;
-            position: relative;
+            position: relative; /* 기준이 되는 요소 */
+            z-index: 200;
         }
-        .hidden-menu {
+        .hidden-menu-container {
             display: none;
-            position: absolute;
-            top: 100%;
+            position: fixed;
+            top: 60px; /* 전체 서비스 버튼 바로 아래 */
             left: 0;
             width: 100%;
+            height: auto; /* 높이 자동 조절 */
             background-color: white;
             padding: 20px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            z-index: 10;
+            z-index: 300;
+            overflow-y: auto;
         }
-        .hidden-menu .close {
+        .hidden-menu-container .close {
             position: absolute;
             top: 10px;
             right: 20px;
@@ -95,8 +98,8 @@
             <i class="fa-solid fa-bars"></i> 전체 서비스
         </div>
         
-        <!-- 숨겨진 전체 메뉴 -->
-        <div id="menuOverlay" class="hidden-menu">
+        <!-- 전체 메뉴바 영역 (초기에 숨김) -->
+        <div id="menuOverlay" class="hidden-menu-container">
             <i class="fa-solid fa-xmark close" onclick="toggleMenu()"></i>
             <div class="menu-section">
                 <div>
@@ -133,7 +136,7 @@
         </div>
         
         <!-- 본문 영역 -->
-        <div class="container my-4">
+        <div class="container my-4" id="content">
             <div class="row g-3">
                 <div class="col-md-4">
                     <div class="content-box bg-primary text-white p-5 text-center">본문1</div>
@@ -151,7 +154,11 @@
     <script>
         function toggleMenu() {
             const menu = document.getElementById('menuOverlay');
-            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+            if (menu.style.display === 'none' || menu.style.display === '') {
+                menu.style.display = 'block';
+            } else {
+                menu.style.display = 'none';
+            }
         }
     </script>
 </body>
