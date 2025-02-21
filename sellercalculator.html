@@ -47,6 +47,21 @@
             text-align: center;
             font-size: 18px;
         }
+        .full-menu {
+            width: 100%;
+            background-color: white;
+            text-align: left;
+            padding: 10px 20px;
+            border-bottom: 1px solid #ddd;
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+        }
+        .full-menu img {
+            width: 24px;
+            height: 24px;
+            margin-right: 10px;
+        }
         .content {
             display: flex;
             flex-wrap: wrap;
@@ -57,13 +72,17 @@
             gap: 20px;
         }
         .content-box {
-            flex: 1;
-            min-width: 300px;
             background-color: #3b6ea5;
             color: white;
             padding: 40px;
             text-align: center;
             font-size: 20px;
+        }
+        .content-box:first-child {
+            flex: 4;
+        }
+        .content-box:last-child {
+            flex: 6;
         }
         .footer {
             width: 100%;
@@ -78,6 +97,10 @@
                 flex-direction: column;
                 align-items: center;
             }
+            .content-box {
+                flex: 1;
+                width: 100%;
+            }
         }
     </style>
 </head>
@@ -87,6 +110,9 @@
         <div class="menu-bar">
             <div class="logo">로고</div>
             <div class="menu-text">상단 메뉴바</div>
+        </div>
+        <div class="full-menu">
+            <img src="menu-icon.png" alt="전체 메뉴 아이콘"> 전체 서비스
         </div>
         <div class="content">
             <div class="content-box">본문1</div>
