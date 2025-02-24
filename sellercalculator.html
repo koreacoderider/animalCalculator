@@ -17,7 +17,7 @@
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700&display=swap" rel="stylesheet">
     
-    <!-- jQuery & AJAX 추가 -->
+    <!-- jQuery 추가 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     
     <style>
@@ -72,7 +72,7 @@
         </div>
         
         <div class="layout-container">
-            <!-- 본문1 영역 -->
+            <!-- 본문1 (계산영역) -->
             <div class="content-box">
                 <h4>계산 영역</h4>
                 <table class="table-container">
@@ -85,22 +85,62 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td id='sm1'></td><td id='sm1_val'></td><td id='sm1_unit'></td><td id='sm1_desc'></td></tr>
-                        <tr><td id='sm2'></td><td id='sm2_val'></td><td id='sm2_unit'></td><td id='sm2_desc'></td></tr>
-                        <tr><td id='sm3'></td><td id='sm3_val'></td><td id='sm3_unit'></td><td id='sm3_desc'></td></tr>
-                        <tr><td id='sm4'></td><td id='sm4_val'></td><td id='sm4_unit'></td><td id='sm4_desc'></td></tr>
-                        <tr><td id='sm5'></td><td id='sm5_val'></td><td id='sm5_unit'></td><td id='sm5_desc'></td></tr>
-                        <tr><td id='sm6'></td><td id='sm6_val'></td><td id='sm6_unit'></td><td id='sm6_desc'></td></tr>
-                        <tr><td id='sm7'></td><td id='sm7_val'></td><td id='sm7_unit'></td><td id='sm7_desc'></td></tr>
-                        <tr><td id='sm8'></td><td id='sm8_val'></td><td id='sm8_unit'></td><td id='sm8_desc'></td></tr>
-                        <tr><td id='sm9'></td><td id='sm9_val'></td><td id='sm9_unit'></td><td id='sm9_desc'></td></tr>
-                        <tr><td id='sm10'></td><td id='sm10_val'></td><td id='sm10_unit'></td><td id='sm10_desc'></td></tr>
-                        <tr><td id='sm11'></td><td id='sm11_val'></td><td id='sm11_unit'></td><td id='sm11_desc'></td></tr>
-                        <tr><td id='sm12'></td><td id='sm12_val'></td><td id='sm12_unit'></td><td id='sm12_desc'></td></tr>
-                        <tr><td id='sm13'></td><td id='sm13_val'></td><td id='sm13_unit'></td><td id='sm13_desc'></td></tr>
-                        <tr><td id='sm14'></td><td id='sm14_val'></td><td id='sm14_unit'></td><td id='sm14_desc'></td></tr>
+                        <tr><td colspan="4"><b>결과영역</b></td></tr>
+                        <tr><td>정산금액</td><td id='sm1_val'></td><td></td><td></td></tr>
+                        <tr><td>순이익</td><td id='sm2_val'></td><td></td><td></td></tr>
+                        <tr><td>마진율</td><td id='sm3_val'></td><td></td><td></td></tr>
+                        
+                        <tr><td colspan="4"><b>매출</b></td></tr>
+                        <tr><td>판매가격</td><td id='sm4_val'></td><td></td><td></td></tr>
+                        <tr><td>배송비</td><td id='sm5_val'></td><td></td><td></td></tr>
+                        
+                        <tr><td colspan="4"><b>매입</b></td></tr>
+                        <tr><td>매입가격</td><td id='sm6_val'></td><td></td><td></td></tr>
+                        <tr><td>매입운송비</td><td id='sm7_val'></td><td></td><td></td></tr>
+                        <tr><td>기타(포장비, 사은품 등)</td><td id='sm8_val'></td><td></td><td></td></tr>
+                        <tr><td>운임비(택배비용)</td><td id='sm9_val'></td><td></td><td></td></tr>
+                        <tr><td>광고비(마케팅)</td><td id='sm10_val'></td><td></td><td></td></tr>
+                        
+                        <tr><td colspan="4"><b>수수료</b></td></tr>
+                        <tr><td>플랫폼 선택</td>
+                            <td>
+                                <select id='platformSelect' onchange='updateFees()'>
+                                    <option value="">선택하세요</option>
+                                    <option value="1">스마트스토어</option>
+                                    <option value="1">쿠팡</option>
+                                    <option value="1">11번가</option>
+                                    <option value="1">지마켓</option>
+                                    <option value="1">옥션</option>
+                                    <option value="1">인터파크</option>
+                                    <option value="1">기타 마켓</option>
+                                </select>
+                            </td>
+                            <td></td><td></td>
+                        </tr>
+                        <tr><td>카테고리수수료</td><td id='sm12_val'>1</td><td></td><td></td></tr>
+                        <tr><td>연동수수료</td><td id='sm13_val'>1</td><td></td><td></td></tr>
+                        <tr><td>배송비수수료</td><td id='sm14_val'>1</td><td></td><td></td></tr>
+                        
+                        <tr><td colspan="4"><b>부가세 선택</b></td></tr>
+                        <tr><td>부가세 유형</td>
+                            <td>
+                                <select id='taxSelect' onchange='updateTax()'>
+                                    <option value="">선택하세요</option>
+                                    <option value="1">간이과세자</option>
+                                    <option value="1">일반과세자</option>
+                                </select>
+                            </td>
+                            <td></td><td></td>
+                        </tr>
+                        <tr><td>부가세 값</td><td id='sm16_val'></td><td></td><td></td></tr>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- 본문2 (추가 정보) -->
+            <div class="content-box">
+                <h4>추가 정보</h4>
+                <p>이곳에 추가적인 정보를 입력할 수 있습니다.</p>
             </div>
         </div>
         
