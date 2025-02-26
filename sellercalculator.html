@@ -23,6 +23,7 @@
     <style>
         body {
             font-family: 'Noto Sans KR', sans-serif;
+            font-size: 1em;
         }
         .layout-container {
             display: flex;
@@ -31,9 +32,18 @@
             gap: 20px;
             padding: 20px;
         }
-        .content-box {
+        .content-box1 {
             flex: 1;
-            min-width: 300px;
+            min-width: 400px;
+            max-width: 600px;
+            padding: 20px;
+            border-radius: 10px;
+            background-color: #f8f9fa;
+            border: 2px solid #ccc;
+        }
+        .content-box2 {
+            flex: 1;
+            min-width: 400px;
             max-width: 600px;
             padding: 20px;
             border-radius: 10px;
@@ -41,13 +51,14 @@
             border: 2px solid #ccc;
         }
         .table-container {
-            width: 100%;
+            width: 100%; /* 부모 요소에 맞춰 자동 조정 */
+            max-width: 100%; /* 최대 너비 제한 */
             border-collapse: collapse;
         }
         .table-container th, .table-container td {
-            border: 1px solid #ccc;
             padding: 10px;
-            text-align: center;
+            text-align: left;
+            font-size: 1em; /* 기본 글자 크기 */
         }
         .table-container th {
             background-color: #007bff;
@@ -61,7 +72,448 @@
             margin-top: 20px;
             border-top: 2px solid #ccc;
         }
-    </style>
+
+        /* 반응형 콤보박스 */
+        select {
+            width: 100%; /* 부모 요소에 맞게 자동 조정 */
+            padding: 0.6em; /* 상대적 크기 조정 */
+            font-size: 1em; /* 기본 폰트 크기 유지 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            -webkit-appearance: auto; /* iOS 기본 스타일 유지 */
+            -moz-appearance: auto; /* Firefox 기본 스타일 유지 */
+            appearance: auto; /* 기본 화살표 유지 */
+            background-color: white;
+        }
+
+        /* 작은 화면에서 자동 조정 */
+        @media (max-width: 768px) {
+            select {
+                width: 100%; /* 작은 화면에서는 전체 너비 */
+                padding: 0.6em; /* 더 작은 패딩 적용 */
+                font-size: 0.9em; /* 작은 화면에서는 폰트 크기 줄이기 */
+            }
+        }
+        
+            /* 반응형 숫자 입력창 */
+        input {
+            width: 100%; /* 부모 요소에 맞게 자동 조정 */
+            padding: 0.6em; /* 상대적인 크기 조정 */
+            font-size: 1em; /* 기본 폰트 크기 */
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            text-align: center;
+            background-color: white;
+            outline: none;
+        }
+
+        /* 포커스 시 (클릭했을 때) 스타일 변경 */
+        input:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        /* 작은 화면에서 자동 조정 */
+        @media (max-width: 768px) {
+            input {
+                padding: 0.5em; /* 내부 여백 조정 */
+                font-size: 0.9em; /* 작은 화면에서는 폰트 크기 줄이기 */
+            }
+        }
+
+        /* 작은 화면에서 자동 조정 */
+        @media (max-width: 768px) {
+            body {
+                font-size: 0.9em; /* 모바일에서 전체 글자 크기 줄이기 */
+            }
+
+            .table-container th, .table-container td {
+                padding: 6px; /* 모바일에서 패딩 줄이기 */
+                font-size: 0.85em; /* 모바일에서 글자 크기 줄이기 */
+            }
+        }
+
+        /* 매우 작은 화면 (예: 480px 이하) */
+        @media (max-width: 480px) {
+            body {
+                font-size: 0.8em; /* 전체 글자 더 줄이기 */
+            }
+
+            .table-container th, .table-container td {
+                font-size: 0.75em; /* 테이블 글자 더 작게 조정 */
+                padding: 4px; /* 패딩 최소화 */
+            }
+        }
+</style>
+
+<!--계산 script 시작!-->
+<script>
+    
+    // 매출변수
+    let sale1 = 0;  //  판매가격
+    let sale2 = 0;  //  배송비
+
+    // 매입변수
+    let buy1 = 0;  //  매입가격
+    let buy2 = 0;  //  매입운송비
+    let buy3 = 0;  //  기타(포장비, 사은품 등등..)
+    let buy4 = 0;  //  운임비(택배비용)
+    let buy5 = 0;  //  광고비(마케팅)
+
+    // 수수료변수
+    let rateStore = 0; //  판매플래폼(스마트스토어1, 쿠팡2, 11번가3, 지마켓4,옥션5, 인터파크6, 기타마켓7)
+    let rate1 = 0;  //  카테고리 수수료율
+    let rate1_1 = 0;  //  카테고리 수수료
+    let rate2 = 0;  //  연동수수료율
+    let rate2_1 = 0;  //  연동수수료
+    let rate3 = 0;  //  배송비수수료율
+    let rate3_1 = 0;  //  배송비수수료
+
+    // 부가세변수
+    let taxName = 0;  //  부과세유형(일반과세자1, 간이과세자10)
+    let tax1 = 0;  //  부과세율
+    const taxRate1 = 0.0909;  //  일반과세 고정상수
+    const taxRate2 = 0.01;  //  간이과세 고정상수
+
+    //  중간계산변수
+    mCal1 = 0;  // 부가세포함 (매출총합:판매가격+배송비)
+    mCal2 = 0;  // 부가세포함 (매입총합)
+    rate1_1 = 0;  //  카테고리 수수료
+    rate2_1 = 0;  //  연동수수료
+    rate3_1 = 0;  //  배송비수수료
+    mCal3 = 0;  // 부가세포함 (매출-매입-수수료)
+    mCal4_1 = 0;  //  일반과세자부과세=부가세포함(매출-매입-수수료)*일반과세자율
+    mCal4_2 = 0;  //  간이과세자부과세=부가세포함(매출-매입-수수료)*간이과세자율
+
+    // 결과변수
+    result1 = 0;  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
+    result2_1 = 0;  //  일반과세순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
+    result2_2 = 0;  //  간이과세순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
+    result3_1 = 0;  //  일반과세마진율=일반과세순이익/(판매가격+배송비)*100
+    result3_2 = 0;  //  간이과세마진율=간이과세순이익/(판매가격+배송비)*100
+
+
+
+    window.onload = function() {
+        //  alert(result1+result2); // 알림 표시
+    };
+
+
+    //  
+    function check(smId){
+
+        var inputValue = document.getElementById(smId).value;
+
+    }
+
+    //  전역변수에 데이터 다시 입력
+    function reCheckValue(){
+        console.log("reCheckValue()");
+        let myArray = new Array(16); // 길이가 16인 빈 배열 생성
+
+        for (let i = 0; i < 16; i++) { // 0부터 15까지 반복
+            let inputValue = Number(document.getElementById("sm" + (i + 1)).value); // sm1부터 sm16까지 접근
+            myArray[i] = inputValue; // 배열은 0부터 시작하므로 i번째에 저장
+        }
+
+        console.log(myArray);
+
+        // 매출변수
+        sale1 = Number(document.getElementById("sm"+4).value);  //  판매가격
+        sale2 = Number(document.getElementById("sm"+5).value);  //  배송비
+
+        // 매입변수
+        buy1 = Number(document.getElementById("sm"+6).value);  //  매입가격
+        buy2 = Number(document.getElementById("sm"+7).value);  //  매입운송비
+        buy3 = Number(document.getElementById("sm"+8).value);  //  기타(포장비, 사은품 등등..)
+        buy4 = Number(document.getElementById("sm"+9).value);  //  운임비(택배비용)
+        buy5 = Number(document.getElementById("sm"+10).value);  //  광고비(마케팅)
+
+        // 수수료변수
+        rateStore = Number(document.getElementById("sm"+11).value);  //  판매플래폼(스마트스토어1, 쿠팡2, 11번가3, 지마켓4,옥션5, 인터파크6, 기타마켓7)
+        rate1 = Number(document.getElementById("sm"+12).value);  //  카테고리 수수료율
+        rate2 = Number(document.getElementById("sm"+13).value);  //  연동수수료율
+        rate3 = Number(document.getElementById("sm"+14).value);  //  배송비수수료율
+
+        //  부가세변수                
+        taxName = Number(document.getElementById("sm"+15).value);  //  부과세유형(일반과세자1, 간이과세자10)
+        tax1 = Number(document.getElementById("sm"+16).value);  //  부과세율
+
+        //  현재 value 기준 다시 계산
+        calculateTotal();
+    }
+
+
+    function calculateTotal(){
+
+        console.log("calculateTotal()");
+
+        //  중간계산변수
+        mCal1 = sale1+sale2;  // 부가세포함 (매출총합:판매가격+배송비)
+        mCal2 = buy1+buy2+buy3+buy4+buy5  // 부가세포함 (매입총합)
+        rate1_1 = sale1*rate1/100;  //  카테고리 수수료
+        rate2_1 = sale1*rate2/100;  //  연동수수료
+        rate3_1 = sale2*rate3/100;  //  배송비수수료
+        mCal3 = mCal1-mCal2-(rate1_1+rate2_1+rate3_1)  // 부가세포함 (매출-매입-수수료)
+        mCal4_1 = mCal3*taxRate1;  //  일반과세자부과세=부가세포함(매출-매입-수수료)*일반과세자율
+        mCal4_2 = mCal3*taxRate2;  //  간이과세자부과세=부가세포함(매출-매입-수수료)*간이과세자율
+
+        // 결과변수
+        result1 = mCal1-(rate1_1+rate2_1+rate3_1);  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
+        result2_1 = mCal1-mCal2-(rate1_1+rate2_1+rate3_1)-mCal4_1 //  일반과세순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
+        result2_2 = mCal1-mCal2-(rate1_1+rate2_1+rate3_1)-mCal4_2 //  간이과세순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
+        result3_1 = (result2_1/mCal1)*100;  //  일반과세마진율=일반과세순이익/(판매가격+배송비)*100
+        result3_2 = (result2_2/mCal1)*100;  //  간이과세마진율=간이과세순이익/(판매가격+배송비)*100
+
+        //  만약 마진율이 바뀐다면 판매가격을 제외한 현재 입력값들을 상수로 두고, 해당 판매가격을 구해야함.
+        //  일반과세자 기준의 판매가격 mChangeSale1과 간이과세자 기준 판매가격 mChangeSale2를 구해야함.
+        //  아래식은 일반과세자 기준으로 분자 mChangeSale1_1 과 분모 mChangeSale1_2를 구해서 최종적으로 mChangeSale1를 구하는 방법이다.
+        //  mChangeSale1_1 = mCal2- (sale2*(1-rate3)) + ( (result3_1*sale2) / ( (1-taxRate1)*100 ))
+        //  mChangeSale1_2 = 1-(rate1+rate2)-(result3_1 / ( (1-taxRate1)*100 ) )
+        //  mChangeSale1 = mChangeSale1_1/mChangeSale1_2;
+
+        console.log("mCal1="+mCal1);
+        console.log("mCal2="+mCal2);
+        console.log("rate1_1="+rate1_1);
+        console.log("rate2_1="+rate2_1);
+        console.log("rate3_1="+rate3_1);
+        console.log("mCal3="+mCal3);
+        console.log("mCal4_1="+mCal4_1);
+        console.log("mCal4_2="+mCal4_2);
+        console.log("result1="+result1);
+        console.log("result2_1="+result2_1);
+        console.log("result2_2="+result2_2);
+        console.log("result3_1="+result3_1);
+        console.log("result3_2="+result3_2);
+
+    }
+
+
+    // 판매금액 *(+) 중간확인
+    function calculateP1(inputId, outputId) {
+        var inputValue = document.getElementById(inputId).value;
+        sale1 = inputValue;  //  판매금액 전역변수 수정
+        
+        if (inputValue !== "") {
+            var result = "+" + inputValue; // (+) 표시
+            document.getElementById(outputId).innerText = result;
+        } else {
+            document.getElementById(outputId).innerText = ""; // 빈 값 처리
+        }
+    }
+
+    // 배송비 *(+) 중간확인
+    function calculateP2(inputId, outputId) {
+        var inputValue = document.getElementById(inputId).value;
+        sale2 = inputValue;  //  배송비 전역변수 수정
+        
+        if (inputValue !== "") {
+            var result = "+" + inputValue; // (+) 표시
+            document.getElementById(outputId).innerText = result;
+        } else {
+            document.getElementById(outputId).innerText = ""; // 빈 값 처리
+        }
+    }
+
+    //  판매가격 입력시 결과영역 정산금액= 판매가격+배송비+((-1)*(카테고리수수료+연동수수료+배송비수수료))
+    function calculatePR1(inputId) {
+
+        var inputValue = Number(document.getElementById(inputId).value);
+
+        // 빈값인 아닌 경우 조건
+        if (inputValue !== "") {
+
+            //  판매가격 입력된 경우
+            if(inputId == 'sm4'){
+                sale1 = inputValue; //  전역변수에 값채워줌.
+
+                //  정산금액 변경
+                result1 = sale1 + sale2 + rate1 + rate2 + rate3;
+                document.getElementById('sm1').innerText = result1;
+
+                //  tax1이 더해지기전에 tax1이 계산완료되야함.(수정완료)
+                //  부가세 변경
+                var sum1 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3  
+                var taxRate = Number(document.getElementById("sm16").value);
+                
+                    //  일반과세자
+                    if(taxRate == 10){
+                        tax1 = sum1 * taxRate1;  //  상수값 곱하기
+                        document.getElementById('sm16_desc').innerText = tax1;
+                        
+                    //  간이과세자
+                    }else if(taxRate == 1){
+                        tax1 = sum1 * taxRate2;  //  상수값 곱하기
+                        document.getElementById('sm16_desc').innerText = tax1;
+                    }else{
+                        document.getElementById('sm16_desc').innerText = ""; // 빈 값 처리
+                    }
+
+                //  순이익 변경
+                result2 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3 + tax1;
+                document.getElementById('sm2').innerText = result2;
+
+                //  마진율 변경
+                result3 = result2/(sale1+sale2)*100;
+                document.getElementById('sm3').innerText = result3;
+
+                //  카테고리 수수료 변경
+                var cateRate1 = Number(document.getElementById("sm12").value);
+                rate1 = (-1)*sale1*cateRate1/100;
+                document.getElementById('sm12_desc').innerText = rate1;
+
+                //  연동 수수료 변경
+                var linkRate2 = Number(document.getElementById("sm13").value);
+                rate2 = (-1)*sale1*linkRate2/100;
+                document.getElementById('sm13_desc').innerText = rate2;
+
+                
+
+
+            //  배송비 입력된 경우
+            } else if(inputId == 'sm5') {
+                sale2 = inputValue; //  전역변수에 값채워줌.
+
+                //  정산금액 변경
+                result1 = sale1 + sale2 + rate1 + rate2 + rate3;
+                document.getElementById('sm1').innerText = result1;
+
+
+                //  tax1이 더해지기전에 tax1이 계산완료되야함.(수정완료)
+                //  부가세 변경
+                var sum1 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3  
+                var taxRate = Number(document.getElementById("sm16").value);
+                
+                    //  일반과세자
+                    if(taxRate == 10){
+                        tax1 = sum1 * taxRate1;  //  상수값 곱하기
+                        document.getElementById('sm16_desc').innerText = tax1;
+                        
+                    //  간이과세자
+                    }else if(taxRate == 1){
+                        tax1 = sum1 * taxRate2;  //  상수값 곱하기
+                        document.getElementById('sm16_desc').innerText = tax1;
+                    }else{
+                        document.getElementById('sm16_desc').innerText = ""; // 빈 값 처리
+                    }
+
+                //  순이익 변경
+                result2 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3 + tax1;
+                document.getElementById('sm2').innerText = result2;
+
+                //  마진율 변경
+                result3 = result2/(sale1+sale2)*100;
+                document.getElementById('sm3').innerText = result3;
+
+                //  배송비 수수료 변경
+                var cateRate3 = Number(document.getElementById("sm14").value);
+                rate3 = (-1)*sale1*cateRate3/100;
+                
+            } else{
+                alert("이런경우는 없음");
+            }
+            
+        } else {
+            document.getElementById(outputId).innerText = ""; // 빈 값 처리
+        }        
+    }
+
+
+    // 매입 *(-) 중간확인
+    function calculateM(inputId, outputId) {
+        let inputValue = document.getElementById(inputId).value;
+        if (inputValue !== "") {
+            let result = inputValue * (-1); // x-1 계산
+            document.getElementById(outputId).innerText = result;
+        } else {
+            document.getElementById(outputId).innerText = ""; // 빈 값 처리
+        }
+    }
+
+
+    //  수수료변경시 카테고리, 연동 중간확인
+    function calculateFee1(inputId, sm4, sm5, outputId) {
+        var inputValue = Number(document.getElementById(inputId).value);
+        var sale1 = Number(document.getElementById(sm4).value);
+        var sale2 = Number(document.getElementById(sm5).value);
+
+        if (inputValue !== "") {
+            var result = (sale1+sale2)*inputValue/100; // (판매금액+배송비)*수수료 계산
+            document.getElementById(outputId).innerText = result;
+        } else {
+            document.getElementById(outputId).innerText = ""; // 빈 값 처리
+        }
+    }
+
+    //  수수료변경시 택배 중간확인
+    function calculateFee2(inputId, sm5, outputId) {
+        var inputValue = Number(document.getElementById(inputId).value);
+        var sale2 = Number(document.getElementById(sm5).value);
+
+        if (inputValue !== "") {
+            var result = sale2*inputValue/100; // (배송비)*수수료 계산
+            document.getElementById(outputId).innerText = result;
+        } else {
+            document.getElementById(outputId).innerText = ""; // 빈 값 처리
+        }
+    }
+
+
+    function updateFees() {
+        const sm11 = document.getElementById('sm11').value;
+        
+        // 플랫폼별 수수료 매핑
+        const fees = {
+            "1": { category: 3.63, link: 2, shipping: 3.63 },  // 스마트스토어
+            "2": { category: 11.88, link: 0, shipping: 3.3 },  // 쿠팡
+            "3": { category: 13, link: 2, shipping: 3.3 },     // 11번가
+            "4": { category: 13, link: 2, shipping: 3.3 },     // 지마켓
+            "5": { category: 13, link: 2, shipping: 3.3 },     // 옥션
+            "6": { category: 13, link: 2, shipping: 3.3 },     // 인터파크
+            "7": { category: 11, link: 2, shipping: 3.3 },     // 기타 마켓
+        };
+
+        if (sm11 in fees) {
+            document.getElementById('sm12').value = fees[sm11].category;
+            document.getElementById('sm13').value = fees[sm11].link;
+            document.getElementById('sm14').value = fees[sm11].shipping;
+            document.getElementById('sm12_desc').innerText = fees[sm11].category;
+            document.getElementById('sm13_desc').innerText = fees[sm11].link;
+            document.getElementById('sm14_desc').innerText = fees[sm11].shipping;
+        } else {
+            document.getElementById('sm12').innerText = "";
+            document.getElementById('sm13').innerText = "";
+            document.getElementById('sm14').innerText = "";
+            document.getElementById('sm12_desc').innerText = "";
+            document.getElementById('sm13_desc').innerText = "";
+            document.getElementById('sm14_desc').innerText = "";
+        }
+    }
+
+    function updateTax() {
+        const selectTax = document.getElementById('selectTax').value;
+        
+        // 플랫폼별 수수료 매핑
+        const fees = {
+            "1": { tax: 10, rate: 0.0909},  // 일반과세자10%
+            "2": { tax: 1, rate: 0.01},  // 간이과세자 매출1%
+
+        };
+
+        if (selectTax in fees) {
+            document.getElementById('sm16').innerText = fees[selectTax].tax;
+            document.getElementById('sm16_desc').innerText = fees[selectTax].rate;
+        } else {
+            document.getElementById('sm16').innerText = "";
+            document.getElementById('sm16_desc').innerText = "";
+
+        }
+    }
+</script>
+
+<!--계산 script 종료!-->
+
 </head>
 <body>
     <div class="container-fluid p-0">
@@ -73,7 +525,7 @@
         
         <div class="layout-container">
             <!-- 본문1 (계산영역) -->
-            <div class="content-box">
+            <div class="content-box1">
                 <h4>계산 영역</h4>
                 <table class="table-container">
                     <thead>
@@ -86,59 +538,58 @@
                     </thead>
                     <tbody>
                         <tr><td colspan="4"><b>결과영역</b></td></tr>
-                        <tr><td>정산금액</td><td id='sm1_val'></td><td></td><td></td></tr>
-                        <tr><td>순이익</td><td id='sm2_val'></td><td></td><td></td></tr>
-                        <tr><td>마진율</td><td id='sm3_val'></td><td></td><td></td></tr>
+                        <tr><td>정산금액</td><td id='sm1'></td><td>원</td><td></td></tr>
+                        <tr><td>순이익</td><td id='sm2'></td><td>원</td><td></td></tr>
+                        <tr><td>마진율</td><td><input type="number" id="sm3" oninput="reCheckValue()"></td><td>%</td><td></td></tr>
                         
                         <tr><td colspan="4"><b>매출</b></td></tr>
-                        <tr><td>판매가격</td><td id='sm4_val'></td><td></td><td></td></tr>
-                        <tr><td>배송비</td><td id='sm5_val'></td><td></td><td></td></tr>
+                        <tr><td>판매가격</td><td><input type="number" id="sm4" oninput="calculateP1('sm4', 'sm4_desc'), calculatePR1('sm4')"></td><td>원</td><td id="sm4_desc"></td></tr>
+                        <tr><td>배송비</td><td><input type="number" id="sm5" oninput="calculateP2('sm5', 'sm5_desc'), calculatePR1('sm5')"></td><td>원</td><td id="sm5_desc"></td></tr>
                         
                         <tr><td colspan="4"><b>매입</b></td></tr>
-                        <tr><td>매입가격</td><td id='sm6_val'></td><td></td><td></td></tr>
-                        <tr><td>매입운송비</td><td id='sm7_val'></td><td></td><td></td></tr>
-                        <tr><td>기타(포장비, 사은품 등)</td><td id='sm8_val'></td><td></td><td></td></tr>
-                        <tr><td>운임비(택배비용)</td><td id='sm9_val'></td><td></td><td></td></tr>
-                        <tr><td>광고비(마케팅)</td><td id='sm10_val'></td><td></td><td></td></tr>
+                        <tr><td>매입가격</td><td><input type="number" id="sm6" oninput="calculateM('sm6', 'sm6_desc')"></td><td>원</td><td id="sm6_desc"></td></tr>
+                        <tr><td>매입운송비</td><td><input type="number" id="sm7" oninput="calculateM('sm7', 'sm7_desc')"></td><td>원</td><td id="sm7_desc"></td></tr>
+                        <tr><td>기타(포장비, 사은품 등)</td><td><input type="number" id="sm8" oninput="calculateM('sm8', 'sm8_desc')"></td><td>원</td><td id="sm8_desc"></td></tr>
+                        <tr><td>운임비(택배비용)</td><td><input type="number" id="sm9" oninput="calculateM('sm9', 'sm9_desc')"></td><td>원</td><td id="sm9_desc"></td></tr>
+                        <tr><td>광고비(마케팅)</td><td><input type="number" id="sm10" oninput="calculateM('sm10', 'sm10_desc')"></td><td>원</td><td id="sm10_desc"></td></tr>
                         
                         <tr><td colspan="4"><b>수수료</b></td></tr>
                         <tr><td>플랫폼 선택</td>
                             <td>
-                                <select id='platformSelect' onchange='updateFees()'>
-                                    <option value="">선택하세요</option>
-                                    <option value="1">스마트스토어</option>
-                                    <option value="1">쿠팡</option>
-                                    <option value="1">11번가</option>
-                                    <option value="1">지마켓</option>
-                                    <option value="1">옥션</option>
-                                    <option value="1">인터파크</option>
-                                    <option value="1">기타 마켓</option>
+                                <select id='sm11' onchange='updateFees()'>
+                                    <option value="1" selected>스마트스토어</option>
+                                    <option value="2">쿠팡</option>
+                                    <option value="3">11번가</option>
+                                    <option value="4">지마켓</option>
+                                    <option value="5">옥션</option>
+                                    <option value="6">인터파크</option>
+                                    <option value="7">기타마켓</option>
                                 </select>
                             </td>
                             <td></td><td></td>
                         </tr>
-                        <tr><td>카테고리수수료</td><td id='sm12_val'>1</td><td></td><td></td></tr>
-                        <tr><td>연동수수료</td><td id='sm13_val'>1</td><td></td><td></td></tr>
-                        <tr><td>배송비수수료</td><td id='sm14_val'>1</td><td></td><td></td></tr>
+                        <tr><td>카테고리수수료</td><td><input type="number" id="sm12" value="3.63" oninput="calculateFee1('sm12', 'sm4','sm5','sm12_desc')"></td><td>%</td><td id="sm12_desc"></td></tr>
+                        <tr><td>연동수수료</td><td><input type="number" id="sm13" value="2" oninput="calculateFee1('sm13', 'sm4','sm5','sm13_desc')"></td><td>%</td><td id="sm13_desc"></td></tr>
+                        <tr><td>배송비수수료</td><td><input type="number" id="sm14" value="3.63" oninput="calculateFee2('sm14', 'sm5','sm14_desc')"></td><td>%</td><td id="sm14_desc"></td></tr>
                         
                         <tr><td colspan="4"><b>부가세 선택</b></td></tr>
                         <tr><td>부가세 유형</td>
                             <td>
-                                <select id='taxSelect' onchange='updateTax()'>
-                                    <option value="">선택하세요</option>
-                                    <option value="1">간이과세자</option>
-                                    <option value="1">일반과세자</option>
+                                <select id='sm15' onchange='updateTax()'>
+                                    <option value="1" selected>일반과세자</option>
+                                    <option value="2">간이과세자</option>
                                 </select>
                             </td>
                             <td></td><td></td>
                         </tr>
-                        <tr><td>부가세 값</td><td id='sm16_val'></td><td></td><td></td></tr>
+                        <tr><td>부가세율</td><td><input type="number" id="sm16" value="10" oninput=""></td><td>%</td><td id="sm16_desc"></td></tr>
+                        
                     </tbody>
                 </table>
             </div>
             
             <!-- 본문2 (추가 정보) -->
-            <div class="content-box">
+            <div class="content-box2">
                 <h4>추가 정보</h4>
                 <p>이곳에 추가적인 정보를 입력할 수 있습니다.</p>
             </div>
