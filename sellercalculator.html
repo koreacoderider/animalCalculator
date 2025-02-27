@@ -155,7 +155,7 @@
     let bArray = new Array(5); // 길이가 5인 매입 배열
     let cArray = new Array(7); // 길이가 7인 수수료 배열
     let tArray = new Array(2); // 길이가 2인 세금 배열
-    let midCArray = new Array(7); // 길이가 7인 중간계산 배열
+    let midCArray = new Array(4); // 길이가 4인 중간계산 배열
     let resultArray = new Array(3);  //  길이가 3인 결과값담는 배열
     let marRArray = new Array(3);  //  길이가 3인 마진역산 결과값담는 배열
     
@@ -172,32 +172,27 @@
 
     // 수수료변수선언
     let rateStore = 0; //  판매플래폼(스마트스토어1, 쿠팡2, 11번가3, 지마켓4,옥션5, 인터파크6, 기타마켓7)
-    let rate1 = 0;  //  카테고리 수수료율
-    let rate1_1 = 0;  //  카테고리 수수료
+    let rate1 = 0;  //  카테고리 수수료율    
     let rate2 = 0;  //  연동수수료율
-    let rate2_1 = 0;  //  연동수수료
     let rate3 = 0;  //  배송비수수료율
+    let rate1_1 = 0;  //  카테고리 수수료
+    let rate2_1 = 0;  //  연동수수료    
     let rate3_1 = 0;  //  배송비수수료
 
     // 부가세변수선언
     let taxName = 0;  //  부과세유형(일반과세자1, 간이과세자10)
     let tax1 = 0;  //  부과세율
-    const taxRate1 = 0.0909;  //  일반과세 고정상수
-    const taxRate2 = 0.01;  //  간이과세 고정상수
 
-    //  중간계산변수선언
-    mCal1 = 0;  // 부가세포함 (매출총합:판매가격+배송비)
-    mCal2 = 0;  // 부가세포함 (매입총합)
-    rate1_1 = 0;  //  카테고리 수수료
-    rate2_1 = 0;  //  연동수수료
-    rate3_1 = 0;  //  배송비수수료
-    mCal3 = 0;  // 부가세포함 (매출-매입-수수료)
-    mCal4 = 0;  //  부과세=부가세포함(매출-매입-수수료)*(100+부과세율)/100 ex) 부과세10%면 10/110을 곱한다.  부과세 3%면 3/103 부과세 1%면 1/101
+    //  중간결과 계산변수선언
+    let mCal1 = 0;  //  부가세포함 (매출총합:판매가격+배송비)
+    let mCal2 = 0;  //  부가세포함 (매입총합)
+    let mCal3 = 0;  //  부가세포함 (매출-매입-수수료)
+    let mCal4 = 0;  //  부과세=부가세포함(매출-매입-수수료)*(100+부과세율)/100 ex) 부과세10%면 10/110을 곱한다.  부과세 3%면 3/103 부과세 1%면 1/101
 
     // 결과변수선언
-    result1 = 0;  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
-    result2 = 0;  //  순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
-    result3 = 0;  //  마진율=일반과세순이익/(판매가격+배송비)*100
+    let result1 = 0;  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
+    let result2 = 0;  //  순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
+    let result3 = 0;  //  마진율=일반과세순이익/(판매가격+배송비)*100
     
 
     //  마진역산 변수선언
@@ -205,9 +200,9 @@
     //  만약 마진율이 바뀐다면 판매가격을 제외한 현재 입력값들을 상수로 두고, 해당 판매가격을 구해야함.
     //  mChangeSale1, mChangeSale2를 구해야함.
     //  mChangeSale1_1 과 분모 mChangeSale1_2를 구해서 최종적으로 mChangeSale1를 구하는 방법이다.
-    mChangeSale1_1 = 0;
-    mChangeSale1_2 = 0;
-    mChangeSale1 = 0;
+    let mChangeSale1_1 = 0;
+    let mChangeSale1_2 = 0;
+    let mChangeSale1 = 0;
 
 
 
@@ -247,18 +242,18 @@
     }
 
     function ComboTaxUpdate() {
-        const selectTax = document.getElementById('sm15').value;
+        let sm15 = document.getElementById('sm15').value;
         
         // 플랫폼별 수수료 매핑
-        const fees = {
+        const taxs = {
             "1": { tax: 10, rate: 0.0909},  // 일반과세자10%
             "2": { tax: 1, rate: 0.01},  // 간이과세자 매출1%
         };
 
-        if (selectTax in fees) {
-            document.getElementById('sm16').innerText = fees[selectTax].tax;
+        if (sm15 in taxs) {
+            document.getElementById('sm16').value = taxs[sm15].tax;
         } else {
-            document.getElementById('sm16').innerText = "";
+            document.getElementById('sm16').value = "";
         }
 
         reCheckValue();
@@ -324,9 +319,9 @@
         // 결과변수
         result1 = mCal1-(rate1_1+rate2_1+rate3_1);  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
         result2 = mCal1-mCal2-(rate1_1+rate2_1+rate3_1)-mCal4 //  순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
-        result3 = (result2/mCal1)*100;  //  마진율=일반과세순이익/(판매가격+배송비)*100     
+        result3 = (result2/mCal1)*100;  //  마진율=순이익/(판매가격+배송비)*100     
 
-        console.log("calculateTotal()종료 result1:" + result1);
+        console.log("calculateTotal()종료 result3:" + result3);
         inputArray();
     }
 
@@ -364,17 +359,14 @@
         tArray[0] = taxName;
         tArray[1] = tax1;
 
-        //  길이가 8인 중간계산 배열에 담기
+        //  길이가 4인 중간계산 배열에 담기
         //  중간계산변수: mCal1 부가세포함 (매출총합:판매가격+배송비), mCal2 부가세포함 (매입총합), rate1_1 카테고리 수수료, rate2_1 연동수수료
         //  rate3_1 배송비수수료, mCal3 부가세포함 (매출-매입-수수료), 
         //  mCal4 과세자부과세=부가세포함(매출-매입-수수료)*(100+부과세율)/100 ex) 부과세10%면 10/110을 곱한다.  부과세 3%면 3/103 부과세 1%면 1/101
         midCArray[0] = mCal1;
         midCArray[1] = mCal2;
-        midCArray[2] = rate1_1;
-        midCArray[3] = rate2_1;
-        midCArray[4] = rate3_1;
-        midCArray[5] = mCal3;
-        midCArray[6] = mCal4;
+        midCArray[2] = mCal3;
+        midCArray[3] = mCal4;
         
 
         //  길이가 3인 결과값담는 배열에 담기
@@ -387,7 +379,7 @@
 
         
         
-        console.log("inputArray()종료 resultArray[0]:" + resultArray[0]);
+        console.log("inputArray()종료 resultArray[2]:" + resultArray[2]);
         printArray();
 
     }
@@ -403,13 +395,20 @@
 
             if (resultArray[i] !== "") {             
 
-                if(i = 2){
-                    document.getElementById("sm" + (i + 1) + "_desc").innerText = ceilToDecimal(resultArray[i], 2);
+                if(i === 2){
+                    document.getElementById("sm" + (i + 1)).value = ceilToDecimal(resultArray[i], 2);
                 }else{
-                    document.getElementById("sm" + (i + 1) + "_desc").innerText = Math.ceil(resultArray[i]);
+                    document.getElementById("sm" + (i + 1)).innerText = Math.ceil(resultArray[i]);
                 }
+
             } else {
-                document.getElementById("sm" + (i + 1) + "_desc").innerText = ""; // 빈 값 처리
+
+                if(i === 2){              
+                    document.getElementById("sm" + (i + 1)).value = ""; // 빈 값 처리
+                }else{
+                    document.getElementById("sm" + (i + 1)).innerText = ""; // 빈 값 처리
+                }
+                
             }
 
         }
