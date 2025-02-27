@@ -19,6 +19,10 @@
     
     <!-- jQuery 추가 -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <!--math.js 추가-->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.6.4/math.js"></script>
+
     
     <style>
         body {
@@ -114,6 +118,13 @@
             box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
         }
 
+        .disabled-input {
+            color: blue; /* 텍스트 색상을 파란색으로 */
+            background-color: #f5f9d1; /* 연한 파란색 배경 */
+            /* border: 1px solid #f1f981; /* 테두리 파란색 */
+            opacity: 1; /* 기본적으로 흐려지는데, 이걸 방지 */
+        }
+
         /* 작은 화면에서 자동 조정 */
         @media (max-width: 768px) {
             input {
@@ -192,7 +203,7 @@
     // 결과변수선언
     let result1 = 0;  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
     let result2 = 0;  //  순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
-    let result3 = 0;  //  마진율=일반과세순이익/(판매가격+배송비)*100
+    let result3 = 0;  //  마진율=순이익/(판매가격+배송비)*100
     
 
     //  마진역산 변수선언
@@ -262,7 +273,12 @@
     //  전역변수에 데이터 다시 입력
     function reCheckValue(){
         console.log("reCheckValue()");
-        
+
+        // 결과변수
+        result1 = Number(document.getElementById("sm"+1).value);  //  정산금액=(판매가격+배송비)-(카테고리수수료+연동수수료+배송비수수료)
+        result2 = Number(document.getElementById("sm"+2).value);  //  순이익=(판매가격+배송비)-(매입가격+매입운송비+기타+운임비+광고비)-(카테고리수수료+연동수수료+배송비수수료)-(부가세)
+        result3 = Number(document.getElementById("sm"+3).value);  //  마진율=일반과세순이익/(판매가격+배송비)*100
+                
         // 매출변수
         sale1 = Number(document.getElementById("sm"+4).value);  //  판매가격
         sale2 = Number(document.getElementById("sm"+5).value);  //  배송비
@@ -479,232 +495,38 @@
     }
 
 
-    //  마진율변경시 역으로 계산하는 방식
+    //  알람으로 테스트용
+    window.onload = function() {
+        document.getElementById("alertButton").addEventListener("click", function() {
+                reCheckMRValue();
+                //alert("이것은 알림창입니다!");
+                console.log("marRArray[0]:"+marRArray[0]);
+                console.log("marRArray[1]:"+marRArray[1]);
+                console.log("marRArray[2]:"+marRArray[2]);
+
+            });
+    };
+
+
+    //  마진율변경시 역으로 판매금액 계산하는 방식
     function reCheckMRValue(){
 
-        console.log("reCheckMRValue()");
+    //     console.log("🔹 reCheckMRValue() 실행!");
 
-        let reMarVal1 = document.getElementById("sm" + (i + 1)).value;
-        let reMarVal2 = document.getElementById("sm" + (i + 1)).value;
+    //     reCheckValue(); // 현재 입력된 값 반영
 
-        if (resultArray[i] !== "") {             
-
-            if(i === 2){
-                document.getElementById("sm" + (i + 1)).value = roundToDecimal(resultArray[i], 2);
-            }else{
-                document.getElementById("sm" + (i + 1)).innerText = Math.round(resultArray[i]);
-            }
-
-            } else {
-
-            if(i === 2){              
-                document.getElementById("sm" + (i + 1)).value = ""; // 빈 값 처리
-            }else{
-                document.getElementById("sm" + (i + 1)).innerText = ""; // 빈 값 처리
-            }
-
-        }
-
-        reCheckValue();
-
-        //  전체 변수 및 중간값들이 존재해야한다는 전제가 필요!!!
-        //  만약 마진율이 바뀐다면 판매가격을 제외한 현재 입력값들을 상수로 두고, 해당 판매가격을 구해야함.
-        //  mChangeSale1, mChangeSale2를 구해야함.
-        //  mChangeSale1_1 과 분모 mChangeSale1_2를 구해서 최종적으로 mChangeSale1를 구하는 방법이다.
-        mChangeSale1_1 = mCal2- (sale2*(1-rate3)) + ( (result3_1*sale2) / ( ( 1-tax1/(100+tax1) )*100 ))
-        mChangeSale1_2 = 1-(rate1+rate2)-(result3_1 / ( ( 1-tax1/(100+tax1) )*100 ) )
-        mChangeSale1 = mChangeSale1_1/mChangeSale1_2;
-
-
-        //  길이가 3인 마진역산 결과값담는 배열
-        //  전체 변수 및 중간값들이 존재해야한다는 전제가 필요!!!
-        //  만약 마진율이 바뀐다면 판매가격을 제외한 현재 입력값들을 상수로 두고, 해당 판매가격을 구해야함.
-        //  mChangeSale1, mChangeSale2를 구해야함.
-        //  mChangeSale1_1 과 분모 mChangeSale1_2를 구해서 최종적으로 mChangeSale1를 구하는 방법이다.
-        marRArray[0] = mChangeSale1_1;
-        marRArray[1] = mChangeSale1_2;
-        marRArray[2] = mChangeSale1;
-
-    }
-
-
-
-
-
-
-
-
-    
-    // 판매금액 *(+) 중간확인
-    function calculateP1(inputId, outputId) {
-        var inputValue = document.getElementById(inputId).value;
-        sale1 = inputValue;  //  판매금액 전역변수 수정
+    //     // 1️⃣ 사용자가 원하는 새로운 마진율 (예: 현재 마진율 +5%)
+    //     let result3_new = 70;
+    //     let sale1_new = 0;
         
-        if (inputValue !== "") {
-            var result = "+" + inputValue; // (+) 표시
-            document.getElementById(outputId).innerText = result;
-        } else {
-            document.getElementById(outputId).innerText = ""; // 빈 값 처리
-        }
-    }
-
-    // 배송비 *(+) 중간확인
-    function calculateP2(inputId, outputId) {
-        var inputValue = document.getElementById(inputId).value;
-        sale2 = inputValue;  //  배송비 전역변수 수정
+    //     //  내가 제대로 구한 공식
+    //     //  result3_new = (((sale1_new+sale2)-mCal2-((sale1_new*rate1/100)+(sale1_new*rate2/100)+rate3_1)-(((sale1_new+sale2)-mCal2-((sale1_new*rate1/100)+(sale1_new*rate2/100)+rate3_1))*tax1/(100+tax1))/(sale1_new+sale2))*100
+    //     //  위 공시을 이용 gpt가 알려준 것
         
-        if (inputValue !== "") {
-            var result = "+" + inputValue; // (+) 표시
-            document.getElementById(outputId).innerText = result;
-        } else {
-            document.getElementById(outputId).innerText = ""; // 빈 값 처리
-        }
+
+
+    //
     }
-
-    //  판매가격 입력시 결과영역 정산금액= 판매가격+배송비+((-1)*(카테고리수수료+연동수수료+배송비수수료))
-    function calculatePR1(inputId) {
-
-        var inputValue = Number(document.getElementById(inputId).value);
-
-        // 빈값인 아닌 경우 조건
-        if (inputValue !== "") {
-
-            //  판매가격 입력된 경우
-            if(inputId == 'sm4'){
-                sale1 = inputValue; //  전역변수에 값채워줌.
-
-                //  정산금액 변경
-                result1 = sale1 + sale2 + rate1 + rate2 + rate3;
-                document.getElementById('sm1').innerText = result1;
-
-                //  tax1이 더해지기전에 tax1이 계산완료되야함.(수정완료)
-                //  부가세 변경
-                var sum1 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3  
-                var taxRate = Number(document.getElementById("sm16").value);
-                
-                    //  일반과세자
-                    if(taxRate == 10){
-                        tax1 = sum1 * taxRate1;  //  상수값 곱하기
-                        document.getElementById('sm16_desc').innerText = tax1;
-                        
-                    //  간이과세자
-                    }else if(taxRate == 1){
-                        tax1 = sum1 * taxRate2;  //  상수값 곱하기
-                        document.getElementById('sm16_desc').innerText = tax1;
-                    }else{
-                        document.getElementById('sm16_desc').innerText = ""; // 빈 값 처리
-                    }
-
-                //  순이익 변경
-                result2 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3 + tax1;
-                document.getElementById('sm2').innerText = result2;
-
-                //  마진율 변경
-                result3 = result2/(sale1+sale2)*100;
-                document.getElementById('sm3').innerText = result3;
-
-                //  카테고리 수수료 변경
-                var cateRate1 = Number(document.getElementById("sm12").value);
-                rate1 = (-1)*sale1*cateRate1/100;
-                document.getElementById('sm12_desc').innerText = rate1;
-
-                //  연동 수수료 변경
-                var linkRate2 = Number(document.getElementById("sm13").value);
-                rate2 = (-1)*sale1*linkRate2/100;
-                document.getElementById('sm13_desc').innerText = rate2;
-
-                
-
-
-            //  배송비 입력된 경우
-            } else if(inputId == 'sm5') {
-                sale2 = inputValue; //  전역변수에 값채워줌.
-
-                //  정산금액 변경
-                result1 = sale1 + sale2 + rate1 + rate2 + rate3;
-                document.getElementById('sm1').innerText = result1;
-
-
-                //  tax1이 더해지기전에 tax1이 계산완료되야함.(수정완료)
-                //  부가세 변경
-                var sum1 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3  
-                var taxRate = Number(document.getElementById("sm16").value);
-                
-                    //  일반과세자
-                    if(taxRate == 10){
-                        tax1 = sum1 * taxRate1;  //  상수값 곱하기
-                        document.getElementById('sm16_desc').innerText = tax1;
-                        
-                    //  간이과세자
-                    }else if(taxRate == 1){
-                        tax1 = sum1 * taxRate2;  //  상수값 곱하기
-                        document.getElementById('sm16_desc').innerText = tax1;
-                    }else{
-                        document.getElementById('sm16_desc').innerText = ""; // 빈 값 처리
-                    }
-
-                //  순이익 변경
-                result2 = sale1 + sale2 + buy1 + buy2 + buy3 + buy4 + buy5 + rate1 + rate2 + rate3 + tax1;
-                document.getElementById('sm2').innerText = result2;
-
-                //  마진율 변경
-                result3 = result2/(sale1+sale2)*100;
-                document.getElementById('sm3').innerText = result3;
-
-                //  배송비 수수료 변경
-                var cateRate3 = Number(document.getElementById("sm14").value);
-                rate3 = (-1)*sale1*cateRate3/100;
-                
-            } else{
-                alert("이런경우는 없음");
-            }
-            
-        } else {
-            document.getElementById(outputId).innerText = ""; // 빈 값 처리
-        }        
-    }
-
-
-    // 매입 *(-) 중간확인
-    function calculateM(inputId, outputId) {
-        let inputValue = document.getElementById(inputId).value;
-        if (inputValue !== "") {
-            let result = inputValue * (-1); // x-1 계산
-            document.getElementById(outputId).innerText = result;
-        } else {
-            document.getElementById(outputId).innerText = ""; // 빈 값 처리
-        }
-    }
-
-
-    //  수수료변경시 카테고리, 연동 중간확인
-    function calculateFee1(inputId, sm4, sm5, outputId) {
-        var inputValue = Number(document.getElementById(inputId).value);
-        var sale1 = Number(document.getElementById(sm4).value);
-        var sale2 = Number(document.getElementById(sm5).value);
-
-        if (inputValue !== "") {
-            var result = (sale1+sale2)*inputValue/100; // (판매금액+배송비)*수수료 계산
-            document.getElementById(outputId).innerText = result;
-        } else {
-            document.getElementById(outputId).innerText = ""; // 빈 값 처리
-        }
-    }
-
-    //  수수료변경시 택배 중간확인
-    function calculateFee2(inputId, sm5, outputId) {
-        var inputValue = Number(document.getElementById(inputId).value);
-        var sale2 = Number(document.getElementById(sm5).value);
-
-        if (inputValue !== "") {
-            var result = sale2*inputValue/100; // (배송비)*수수료 계산
-            document.getElementById(outputId).innerText = result;
-        } else {
-            document.getElementById(outputId).innerText = ""; // 빈 값 처리
-        }
-    }
-
-
     
 </script>
 
@@ -734,9 +556,9 @@
                     </thead>
                     <tbody>
                         <tr><td colspan="4"><b>결과영역</b></td></tr>
-                        <tr><td>정산금액</td><td id='sm1'></td><td>원</td><td id="sm1_desc"></td></tr>
-                        <tr><td>순이익</td><td id='sm2'></td><td>원</td><td id="sm2_desc"></td></tr>
-                        <tr><td>마진율</td><td><input type="number" id="sm3" oninput="reCheckMRValue()"></td><td>%</td><td id="sm3_desc"></td></tr>
+                        <tr><td>정산금액</td><td style="text-align:center" id='sm1'></td><td>원</td><td id="sm1_desc"></td></tr>
+                        <tr><td>순이익</td><td style="text-align:center" id='sm2'></td><td>원</td><td id="sm2_desc"></td></tr>
+                        <tr><td>마진율</td><td><input type="number" id="sm3" oninput="reCheckMRValue()" disabled class="disabled-input"></td><td>%</td><td id="sm3_desc"></td></tr>
                         
                         <tr><td colspan="4"><b>매출</b></td></tr>
                         <tr><td>판매가격</td><td><input type="number" id="sm4" oninput="reCheckValue()"></td><td>원</td><td id="sm4_desc"></td></tr>
@@ -787,7 +609,7 @@
             <!-- 본문2 (추가 정보) -->
             <div class="content-box2">
                 <h4>추가 정보</h4>
-                <p>이곳에 추가적인 정보를 입력할 수 있습니다.</p>
+                <!--<button id="alertButton">알림창 띄우기</button>-->
             </div>
         </div>
         
